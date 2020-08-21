@@ -43,3 +43,10 @@ npm i bootstrap jquery popper.js
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 ```
+## Internationalization
+vue add i18n
+
+## Error chokify num watches in files
+$ echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf
+and
+$ sudo sysctl -p

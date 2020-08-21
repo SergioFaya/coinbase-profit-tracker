@@ -1,7 +1,6 @@
 <template>
   <div class="hello">
-    <h1>{{ title }}</h1>
-
+    <h1>{{ $t("message")  }}</h1>
   </div>
 </template>
 
