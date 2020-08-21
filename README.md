@@ -36,7 +36,7 @@ npm install -g vue-generate-component
 vgc -s componentname
 ## Add bootstrap
 https://bootstrap-vue.org/docs
-npm i bootstrap jquery popper.js
+vue add bootstrap-vue
 * In main.js we add
 
 ```{js}
