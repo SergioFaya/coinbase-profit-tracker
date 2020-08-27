@@ -1,24 +1,42 @@
 <template>
   <div>
-		<NavBar/>
-		<div id="app">
-		<img alt="Vue logo" src="./assets/logo.png"/>
-		<HelloWorld msg="Welcome to Your Vue.js App"/>
-		</div>
+    <NavBar v-on:selectedNavChange="updateNav"></NavBar>
+    <div class="container justify-content-start">
+      <b-alert fade dismissible :show="showError" variant="danger">{{error}}</b-alert>
+      <component v-on:errorMsg="updateError" :is="selectedNav"></component>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-import NavBar from './components/NavBar.vue'
+import NavBar from "./components/NavBar.vue";
+import General from "./components/General.vue";
+import Wallet from "./components/Wallet.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-	HelloWorld,
-	NavBar
-  }
-}
+    NavBar,
+    General,
+    Wallet,
+  },
+  data: () => {
+    return {
+      selectedNav: "Wallet",
+      error: null,
+      showError: false,
+    };
+  },
+  methods: {
+    updateNav(name) {
+      this.selectedNav = name;
+    },
+    updateError(errorMsg) {
+      this.error = errorMsg;
+      this.showError = errorMsg != null;
+    },
+  },
+};
 </script>
 
 <style>
@@ -26,8 +44,7 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  /*margin-top: 60px;*/
 }
 </style>

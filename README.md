@@ -50,3 +50,6 @@ vue add i18n
 $ echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf
 and
 $ sudo sysctl -p
+
+## Graficos en Vue
+npm install vue-chartjs chart.js --save

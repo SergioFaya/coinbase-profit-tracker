@@ -1,3 +1,19 @@
 {
-  "message": "hola i18n !!"
+	"navbar": {
+		"title": "Coinbase Profit Tracker",
+		"links": {
+			"general": "Vista General",
+			"wallet": "Cartera",
+			"user": {
+				"signIn": "Login",
+				"signUp": "Registrate"
+			}
+		}
+	},
+	"general": {
+		"title": "Vista General"
+	},
+	"wallet": {
+		"title": "Cartera"
+	}
 }
