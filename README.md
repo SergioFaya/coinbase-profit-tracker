@@ -1,4 +1,5 @@
 # coinbase-profit
+Vue based app for controling my beneficts in coinbase
 
 ## Project setup
 ```
