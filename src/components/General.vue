@@ -11,6 +11,7 @@
 import LineChart from './charts/LineChart.js'
 import BarChart from './charts/BarChart.js'
 
+
 export default {
     name: 'general',
     components: {

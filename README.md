@@ -63,3 +63,7 @@ https://www.npmjs.com/package/vue-cryptocurrency-icons
 For plugin directly install
 
 npm install --save vue-cryptocurrency-icons
+
+# Loading Overlay Component
+https://www.npmjs.com/package/vue-loading-overlay
+npm install vue-loading-overlay
