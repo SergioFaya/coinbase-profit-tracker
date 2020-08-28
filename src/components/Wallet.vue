@@ -1,15 +1,17 @@
 <template lang="html">
 <section class="wallet">
-    <h2> {{ $t("wallet.title")}}</h2>
-
+    <h2> {{ $t("wallet.title")}}: {{totalAmount}}</h2>
     <b-card-group columns>
         <b-card v-for="account in accounts" :key="account.id" bg-variant="secondary" text-variant="white" class="text-center">
             <b-card-header>
                 <span>{{account.name}}
                     <IconCrypto :coinname="account.currency" color="color" format="svg" /></span>
             </b-card-header>
-            <b-card-text> {{account.balance.amount}}</b-card-text>
-            <b-card-text>{{account}}</b-card-text>
+            <b-card-body>
+                <b-card-text v-if="account.type == 'wallet'">{{account.balance.amount}} {{account.balance.currency}}</b-card-text>
+                <b-card-text>{{account.native_balance.amount}} {{account.native_balance.currency}}</b-card-text>
+            </b-card-body>
+            <!-- <b-card-text>{{account}}</b-card-text> -->
             <b-button variant="light">Button</b-button>
         </b-card>
 
@@ -30,6 +32,7 @@ export default {
     data() {
         return {
             accounts: null,
+            totalAmount: 0,
         }
     },
     methods: {
@@ -44,6 +47,12 @@ export default {
                 .then((response) => {
                     var rawAccounts = response.data.data;
                     this.accounts = rawAccounts.filter(account => account.balance.amount != 0)
+                    this.totalAmount = this.accounts.reduce((total, x) => {
+                        console.log(x);
+                        return total + new Number(x.native_balance.amount);
+                    }, 0);
+
+                    this.totalAmount = Math.floor(this.totalAmount * 100) / 100;
 
                 }).catch((err) => {
                     this.$emit('errorMsg', err)
