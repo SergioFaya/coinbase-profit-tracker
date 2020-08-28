@@ -18,6 +18,7 @@
     "popper.js": "^1.16.1",
     "vue": "^2.6.11",
     "vue-chartjs": "^3.5.1",
+    "vue-cryptocurrency-icons": "^0.2.5",
     "vue-i18n": "^8.17.3"
   },
   "devDependencies": {

@@ -54,3 +54,12 @@ $ sudo sysctl -p
 
 ## Graficos en Vue
 npm install vue-chartjs chart.js --save
+
+## Crypto Icons
+http://cryptoicons.co/
+to reference image in npm package '~'
+<img src="~cryptocurrency-icons/svg/color/kmd.svg" />
+https://www.npmjs.com/package/vue-cryptocurrency-icons
+For plugin directly install
+
+npm install --save vue-cryptocurrency-icons

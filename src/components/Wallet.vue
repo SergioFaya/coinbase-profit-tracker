@@ -3,8 +3,11 @@
     <h2> {{ $t("wallet.title")}}</h2>
 
     <b-card-group columns>
-
-        <b-card v-for="account in accounts" :key="account.id" bg-variant="secondary" text-variant="white" :header="account.name" class="text-center">
+        <b-card v-for="account in accounts" :key="account.id" bg-variant="secondary" text-variant="white" class="text-center">
+            <b-card-header>
+                <span>{{account.name}}
+                    <IconCrypto :coinname="account.currency" color="color" format="svg" /></span>
+            </b-card-header>
             <b-card-text> {{account.balance.amount}}</b-card-text>
             <b-card-text>{{account}}</b-card-text>
             <b-button variant="light">Button</b-button>
@@ -19,6 +22,7 @@ import axios from './service/CoinbaseConfig.js';
 
 export default {
     name: 'wallet',
+    components: {},
     props: [],
     mounted() {
         this.getAxiosData();
@@ -35,8 +39,8 @@ export default {
          *  The timestamp value is the same as the CB-ACCESS-TIMESTAMP header.
          */
         getAxiosData() {
-			axios
-				.get('/v2/accounts')
+            axios
+                .get('/v2/accounts')
                 .then((response) => {
                     var rawAccounts = response.data.data;
                     this.accounts = rawAccounts.filter(account => account.balance.amount != 0)

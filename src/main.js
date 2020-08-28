@@ -4,8 +4,10 @@ import Vue from 'vue'
 import './plugins/bootstrap-vue'
 import App from './App.vue'
 import i18n from './i18n'
+import IconCrypto from "vue-cryptocurrency-icons";
 
 Vue.config.productionTip = true
+Vue.use(IconCrypto);
 
 new Vue({
 	i18n,
