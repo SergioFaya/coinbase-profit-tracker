@@ -15,8 +15,7 @@
 </template>
 
 <script lang="js">
-import axios from 'axios';
-import crypto from 'crypto';
+import axios from './service/CoinbaseConfig.js';
 
 export default {
     name: 'wallet',
@@ -36,34 +35,8 @@ export default {
          *  The timestamp value is the same as the CB-ACCESS-TIMESTAMP header.
          */
         getAxiosData() {
-
-            const apiKey = process.env.VUE_APP_COINBASE_API_KEY;
-            const apiSecret = process.env.VUE_APP_COINBASE_API_KEY_SECRET;
-
-            //get unix time in seconds
-            var timestamp = Math.floor(Date.now() / 1000);
-
-            var req = {
-                method: 'GET',
-                path: '/v2/accounts',
-                body: ''
-            };
-
-            var message = timestamp + req.method + req.path + req.body;
-            console.log(message);
-
-            //create a hexedecimal encoded SHA256 signature of the message
-            var signature = crypto.createHmac("sha256", apiSecret).update(message).digest("hex");
-            axios.create({
-                    baseURL: 'https://api.coinbase.com/',
-                    headers: {
-                        'CB-ACCESS-SIGN': signature,
-                        'CB-ACCESS-TIMESTAMP': timestamp,
-                        'CB-ACCESS-KEY': apiKey,
-                        'CB-VERSION': '2015-07-22'
-                    }
-                })
-                .get('/v2/accounts')
+			axios
+				.get('/v2/accounts')
                 .then((response) => {
                     var rawAccounts = response.data.data;
                     this.accounts = rawAccounts.filter(account => account.balance.amount != 0)
