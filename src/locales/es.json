@@ -14,6 +14,7 @@
 		"title": "Vista General"
 	},
 	"wallet": {
-		"title": "Cartera"
+		"title": "Cartera",
+		"total": "Total"
 	}
 }

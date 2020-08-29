@@ -1,10 +1,10 @@
 <template lang="html">
 <section class="wallet">
-    <h2> {{ $t("wallet.title")}}: {{totalAmount}}</h2>
+    <h2> {{ $t("wallet.title")}}</h2>
 
     <b-card bg-variant="secondary" text-variant="white" class="text-left mt-4 mb-4">
         <b-card-body class="p-0 pl-2">
-
+           {{ $t("wallet.total")}}: {{totalAmount}} {{getUserInfo().native_currency}}
         </b-card-body>
     </b-card>
 
@@ -30,11 +30,10 @@ import axios from '../service/CoinbaseConfig.js';
 
 export default {
     name: 'wallet',
-    components: {
-    },
+    components: {},
     props: [],
     mounted() {
-		this.getAccounts();
+        this.getAccounts();
     },
     data() {
         return {
@@ -44,25 +43,26 @@ export default {
     },
     methods: {
         getAccounts() {
-			this.$emit('loading', true);
+            this.$emit('loading', true);
             axios
                 .get('/v2/accounts')
                 .then((response) => {
                     var rawAccounts = response.data.data;
                     this.accounts = rawAccounts.filter(account => account.balance.amount != 0)
                     this.totalAmount = this.accounts.reduce((total, x) => {
-                        console.log(x);
                         return total + new Number(x.native_balance.amount);
                     }, 0);
 
                     this.totalAmount = Math.floor(this.totalAmount * 100) / 100;
-
                 }).catch((err) => {
                     this.$emit('errorMsg', err);
                 }).finally(() => {
                     this.$emit('loading', false);
                 });
-		},
+        },
+        getUserInfo() {
+            return JSON.parse(localStorage.getItem('user'));
+        }
     },
     computed: {
 

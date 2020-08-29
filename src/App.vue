@@ -1,9 +1,11 @@
 <template>
 <div>
     <nav-bar v-on:selectedNavChange="updateNav"></nav-bar>
-	<loading-overlay-custom :isLoading="loading" />
+    <loading-overlay-custom :isLoading="loading" />
     <div class="container justify-content-start">
         <b-alert fade dismissible :show="showError" variant="danger">{{error}}</b-alert>
+    </div>
+    <div v-if="ready" class="container justify-content-start">
         <component v-on:loading="updateLoading" v-on:errorMsg="updateError" :is="selectedNav"></component>
     </div>
 </div>
@@ -21,41 +23,47 @@ export default {
     components: {
         NavBar,
         General,
-		Wallet,
-		LoadingOverlayCustom,
+        Wallet,
+        LoadingOverlayCustom,
     },
     data: () => {
         return {
             selectedNav: "Wallet",
             error: null,
             showError: false,
-            loading: false
+			loading: true,
+			loadingCount: 0,
+			ready: false,
         };
     },
     mounted() {
-        this.getUserInfo();
+		this.getUserInfo();
     },
     methods: {
         updateNav(name) {
             this.selectedNav = name;
         },
         updateError(errorMsg) {
+			console.log("error");
             this.error = errorMsg;
             this.showError = errorMsg != null;
-		},
-		updateLoading(loading){
-			this.loading = loading;
-		},
+        },
+        updateLoading(loading) {
+			this.loadingCount++;
+			console.log("loading:" ,loading);
+            this.loading = loading;
+        },
         getUserInfo() {
             this.$emit('loading', true);
             axios
                 .get('/v2/user')
                 .then((response) => {
-                    console.log(response.data);
+					localStorage.setItem('user',JSON.stringify(response.data.data));
+                    this.ready = true;
                 }).catch((err) => {
                     this.$emit('errorMsg', err);
                 }).finally(() => {
-                    this.$emit('loading', false);
+					this.updateLoading(false)
                 })
         }
     },
