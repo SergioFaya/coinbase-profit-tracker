@@ -44,7 +44,6 @@ export default {
             this.showError = errorMsg != null;
 		},
 		updateLoading(loading){
-			console.log('UPDATE LOADING')
 			this.loading = loading;
 		},
         getUserInfo() {
