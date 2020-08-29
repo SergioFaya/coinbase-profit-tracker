@@ -1,7 +1,13 @@
 <template lang="html">
 <section class="wallet">
-    <LoadingOverlayCustom :isLoading="loading" />
     <h2> {{ $t("wallet.title")}}: {{totalAmount}}</h2>
+
+    <b-card bg-variant="secondary" text-variant="white" class="text-left mt-4 mb-4">
+        <b-card-body class="p-0 pl-2">
+
+        </b-card-body>
+    </b-card>
+
     <b-card-group columns>
         <b-card v-for="account in accounts" :key="account.id" bg-variant="secondary" text-variant="white" class="text-center">
             <b-card-header>
@@ -20,29 +26,25 @@
 </template>
 
 <script lang="js">
-import axios from './service/CoinbaseConfig.js';
-import LoadingOverlayCustom from './LoadingOverlayCustom.vue'
+import axios from '../service/CoinbaseConfig.js';
 
 export default {
     name: 'wallet',
     components: {
-        LoadingOverlayCustom
     },
     props: [],
     mounted() {
-        this.loading = true;
-        this.getAxiosData();
-
+		this.getAccounts();
     },
     data() {
         return {
             accounts: null,
             totalAmount: 0,
-            loading: true
         }
     },
     methods: {
-        getAxiosData() {
+        getAccounts() {
+			this.$emit('loading', true);
             axios
                 .get('/v2/accounts')
                 .then((response) => {
@@ -56,11 +58,11 @@ export default {
                     this.totalAmount = Math.floor(this.totalAmount * 100) / 100;
 
                 }).catch((err) => {
-                    this.$emit('errorMsg', err)
+                    this.$emit('errorMsg', err);
                 }).finally(() => {
-                    this.loading = false;
+                    this.$emit('loading', false);
                 });
-        }
+		},
     },
     computed: {
 
