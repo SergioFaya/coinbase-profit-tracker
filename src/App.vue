@@ -31,40 +31,48 @@ export default {
             selectedNav: "Wallet",
             error: null,
             showError: false,
-			loading: true,
-			loadingCount: 0,
-			ready: false,
+            loading: true,
+            loadingCount: 0,
+            ready: false,
         };
     },
     mounted() {
-		this.getUserInfo();
+        this.getUserInfo();
     },
     methods: {
         updateNav(name) {
             this.selectedNav = name;
         },
         updateError(errorMsg) {
-			console.log("error");
+            console.log("error");
             this.error = errorMsg;
             this.showError = errorMsg != null;
         },
         updateLoading(loading) {
-			this.loadingCount++;
-			console.log("loading:" ,loading);
-            this.loading = loading;
+            if (loading) {
+                this.loadingCount++;
+            } else {
+                this.loadingCount--;
+			}
+			if (this.loadingCount > 0) {
+                this.loading = true;
+            }else if (this.loadingCount == 0) {
+                this.loading = false;
+            }
+
         },
         getUserInfo() {
             this.$emit('loading', true);
             axios
                 .get('/v2/user')
                 .then((response) => {
-					localStorage.setItem('user',JSON.stringify(response.data.data));
+                    localStorage.setItem('user', JSON.stringify(response.data.data));
                     this.ready = true;
                 }).catch((err) => {
                     this.$emit('errorMsg', err);
                 }).finally(() => {
-					this.updateLoading(false)
-                })
+                    this.$emit('loading', false);
+                });
         }
     },
 };
