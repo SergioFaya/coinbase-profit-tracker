@@ -21,5 +21,10 @@
 		"amounts": "Cantidades",
 		"fees": "Comisiones",
 		"sells": "Ventas"
+	},
+	"toast": {
+		"warn": "Alerta",
+		"error": "Error",
+		"success": "Éxito"
 	}
 }

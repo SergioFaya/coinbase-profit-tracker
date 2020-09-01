@@ -2,11 +2,6 @@
   <div>
     <nav-bar v-on:selectedNavChange="updateNav"></nav-bar>
     <loading-overlay-custom :isLoading="loading" />
-    <div class="container justify-content-start">
-      <b-alert fade dismissible :show="error" variant="danger">{{ error }}</b-alert>
-      <b-alert fade dismissible :show="showWarn" variant="warning">{{ warn }}</b-alert>
-      <b-alert fade dismissible :show="success" variant="success">{{ success }}</b-alert>
-    </div>
     <div v-if="ready" class="container justify-content-start">
       <component
         v-on:loading="updateLoading"
@@ -37,13 +32,9 @@ export default {
   data: () => {
     return {
       selectedNav: "Wallet",
-      error: null,
-      warn: null,
-      success: null,
       loading: true,
       loadingCount: 0,
       ready: false,
-      showWarn: false,
     };
   },
   mounted() {
@@ -54,29 +45,29 @@ export default {
       this.selectedNav = name;
     },
     updateError(message) {
-      if (message) {
-        this.showError = true;
-        this.error = message;
-      } else {
-        this.showError = false;
-      }
-      this.error = message;
+      this.$bvToast.toast(message, {
+        title: this.$t("toast.error"),
+        autoHideDelay: 10000,
+        appendToast: false,
+        variant: "danger",
+      });
     },
     updateWarn(message) {
-      if (message) {
-        this.showWarn = true;
-        this.warn = message;
-      } else {
-        this.showWarn = false;
-      }
+      this.$bvToast.toast(message, {
+        title: this.$t("toast.warn"),
+        autoHideDelay: 10000,
+        appendToast: false,
+        solid: true,
+        variant: "warning",
+      });
     },
     updateSuccess(message) {
-      if (message) {
-        this.showSuccess = true;
-        this.success = message;
-      } else {
-        this.showSuccess = false;
-      }
+      this.$bvToast.toast(message, {
+        title: this.$t("toast.success"),
+        autoHideDelay: 10000,
+        appendToast: false,
+        variant: "success",
+      });
     },
     updateLoading(loading) {
       if (loading) {
