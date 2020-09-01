@@ -19,7 +19,8 @@
     "vue": "^2.6.11",
     "vue-chartjs": "^3.5.1",
     "vue-cryptocurrency-icons": "^0.2.5",
-    "vue-i18n": "^8.17.3"
+    "vue-i18n": "^8.17.3",
+    "vue-loading-overlay": "^3.4.0"
   },
   "devDependencies": {
     "@babel/polyfill": "^7.7.0",

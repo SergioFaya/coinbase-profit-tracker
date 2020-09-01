@@ -15,6 +15,11 @@
 	},
 	"wallet": {
 		"title": "Cartera",
-		"total": "Total"
+		"total": "Total",
+		"transactions": "Transacciones",
+		"buys": "Compras",
+		"amounts": "Cantidades",
+		"fees": "Comisiones",
+		"sells": "Ventas"
 	}
 }

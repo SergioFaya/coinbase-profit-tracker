@@ -67,3 +67,6 @@ npm install --save vue-cryptocurrency-icons
 # Loading Overlay Component
 https://www.npmjs.com/package/vue-loading-overlay
 npm install vue-loading-overlay
+
+#  eslint plugin
+npm i @vue/cli-plugin-eslint
