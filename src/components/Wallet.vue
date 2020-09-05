@@ -91,7 +91,7 @@
 </template>
 
 <script lang="js">
-import axios from '../service/CoinbaseConfig.js';
+import transactionsService from '../services/Transactions.js'
 
 export default {
 	name: 'wallet',
@@ -111,12 +111,11 @@ export default {
 	methods: {
 		getAccounts() {
 			this.$emit('loading', true);
-			axios
-				.get('/v2/accounts')
-				.then((response) => {
-					var rawAccounts = response.data.data;
-					this.accounts = rawAccounts.filter(account => account.balance.amount != 0)
-					this.totalAmount = this.accounts.reduce((total, x) => {
+			transactionsService
+				.getAccounts()
+				.then((accounts) => {
+					this.accounts = accounts;
+					this.totalAmount = accounts.reduce((total, x) => {
 						return total + new Number(x.native_balance.amount);
 					}, 0);
 
@@ -129,20 +128,14 @@ export default {
 		},
 		getAccountBuys(accountId) {
 			this.$emit('loading', true);
-			axios
-				.get(`/v2/accounts/${accountId}/buys`)
-				.then((result) => {
-					this.accountBuys = result.data.data;
-					return result.data;
-				})
-				.then((response) => {
-					if(response.pagination.limit < response.data.length || response.pagination.next_uri != null){
-						this.$emit('errorMsg', "MAS DE 25 COMPRAS, ACTUALIZAR FUNCIONALIDAD");
-					}
-					if (response.data.length > 0) {
+			transactionsService
+				.getAccountBuys(accountId)
+				.then((accountBuys) => {
+					this.accountBuys = accountBuys.data;
+					if (accountBuys.data.length > 0) {
 						this.$bvModal.show('accountInfoModal')
 					}else{
-						this.$emit('warnMsg', "No existe información de compras sobre la venta");
+						this.$emit('warnMsg', "No existe información de compras sobre la transaccion");
 					}
 				})
 				.catch((err) => {
@@ -153,20 +146,14 @@ export default {
 		},
 		getAccountSells(accountId){
 			this.$emit('loading', true);
-			axios
-				.get(`/v2/accounts/${accountId}/sells`)
-				.then((result) => {
-					this.accountSells = result.data.data;
-					return result.data;
-				})
-				.then((response) => {
-					if(response.pagination.limit < response.data.length || response.pagination.next_uri != null){
-						this.$emit('errorMsg', "MAS DE 25 COMPRAS, ACTUALIZAR FUNCIONALIDAD");
-					}
-					if (response.data.length > 0) {
+			transactionsService
+				.getAccountSells(accountId)
+				.then((accountSells) => {
+					this.accountSells = accountSells.data;
+					if (accountSells.data.length > 0) {
 						this.$bvModal.show('accountInfoModal')
 					}else{
-						this.$emit('warnMsg', "No existe información de ventas sobre la cuenta");
+						this.$emit('warnMsg', "No existe información de ventas sobre la transaccion");
 					}
 				})
 				.catch((err) => {
