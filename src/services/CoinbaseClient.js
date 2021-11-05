@@ -1,5 +1,6 @@
 import axios from 'axios';
 import crypto from 'crypto';
+import { Client } from 'coinbase';
 
 const apiKey = process.env.VUE_APP_COINBASE_API_KEY;
 const apiSecret = process.env.VUE_APP_COINBASE_API_KEY_SECRET;
@@ -36,8 +37,8 @@ const customAxios = {
 			path: urlPath,
 			body: ''
 		};
-		const signature = buildSignature(timestamp,req);
-		return buildAxios(signature,timestamp,apiKey).get(urlPath);
+		const signature = buildSignature(timestamp, req);
+		return buildAxios(signature, timestamp, apiKey).get(urlPath);
 	},
 	post: (urlPath, body) => {
 		const timestamp = getTimestampInSeconds();
@@ -46,8 +47,8 @@ const customAxios = {
 			path: urlPath,
 			body: body
 		};
-		const signature = buildSignature(timestamp,req);
-		return buildAxios(signature,timestamp,apiKey).get(urlPath);
+		const signature = buildSignature(timestamp, req);
+		return buildAxios(signature, timestamp, apiKey).post(urlPath, body);
 	}
 }
 

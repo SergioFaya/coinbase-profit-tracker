@@ -1,4 +1,4 @@
-import axios from './CoinbaseConfig';
+import axios from './AxiosCoinbaseClient';
 
 export default {
 	/**

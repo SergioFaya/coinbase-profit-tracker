@@ -18,7 +18,7 @@
 import NavBar from "./components/NavBar.vue";
 import General from "./components/General.vue";
 import Wallet from "./components/Wallet.vue";
-import axios from "./services/CoinbaseConfig.js";
+import axios from "./services/AxiosCoinbaseClient.js";
 import LoadingOverlayCustom from "./components/LoadingOverlayCustom.vue";
 
 export default {
