@@ -1,14 +1,14 @@
 import axios from 'axios';
-import crypto from 'crypto';
+const crypto = require('crypto');
 
 const apiKey = process.env.VUE_APP_COINBASE_API_KEY;
 const apiSecret = process.env.VUE_APP_COINBASE_API_KEY_SECRET;
 
-const getTimestampInSeconds = () => {
+const getTimestampInSeconds = (): number => {
 	return Math.floor(Date.now() / 1000);
 };
 
-const buildSignature = (timestamp, req) => {
+const buildSignature = (timestamp: number, req: any): string => {
 	var message = timestamp + req.method + req.path + req.body;
 	console.log(message);
 
@@ -16,7 +16,7 @@ const buildSignature = (timestamp, req) => {
 	return crypto.createHmac("sha256", apiSecret).update(message).digest("hex");
 }
 
-const buildAxios = (signature, timestamp, apiKey) => {
+const buildAxios = (signature: string, timestamp: number, apiKey: string) => {
 	return axios.create({
 		baseURL: 'https://api.coinbase.com/',
 		headers: {
@@ -29,7 +29,7 @@ const buildAxios = (signature, timestamp, apiKey) => {
 }
 
 const customAxios = {
-	get: (urlPath) => {
+	get: (urlPath: string) => {
 		const timestamp = getTimestampInSeconds();
 		const req = {
 			method: 'GET',
@@ -39,7 +39,7 @@ const customAxios = {
 		const signature = buildSignature(timestamp, req);
 		return buildAxios(signature, timestamp, apiKey).get(urlPath);
 	},
-	post: (urlPath, body) => {
+	post: (urlPath: string, body: any) => {
 		const timestamp = getTimestampInSeconds();
 		const req = {
 			method: 'POST',
@@ -50,5 +50,4 @@ const customAxios = {
 		return buildAxios(signature, timestamp, apiKey).post(urlPath, body);
 	}
 }
-
 export default customAxios;

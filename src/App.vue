@@ -18,9 +18,8 @@
 import NavBar from "./components/NavBar.vue";
 import General from "./components/General.vue";
 import Wallet from "./components/Wallet.vue";
-import axios from "./services/AxiosCoinbaseClient";
+import coinbaseClient from './services/CoinbaseClient'
 import LoadingOverlayCustom from "./components/LoadingOverlayCustom.vue";
-import AxiosTransactions from "./services/AxiosTransactions"
 
 export default {
   name: "App",
@@ -40,7 +39,6 @@ export default {
   },
   mounted() {
     this.getUserInfo();
-    AxiosTransactions
   },
   methods: {
     updateNav(name) {
@@ -85,10 +83,9 @@ export default {
     },
     getUserInfo() {
       this.$emit("loading", true);
-      axios
-        .get("/v2/user")
-        .then((response) => {
-          localStorage.setItem("user", JSON.stringify(response.data.data));
+      coinbaseClient.getUser()
+        .then((user) => {
+          localStorage.setItem("user", JSON.stringify(user));
           this.ready = true;
         })
         .catch((err) => {

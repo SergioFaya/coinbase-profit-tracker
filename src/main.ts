@@ -1,15 +1,16 @@
-import '@babel/polyfill'
-import 'mutationobserver-shim'
-import Vue from 'vue'
-import './plugins/bootstrap-vue'
-import App from './App.vue'
-import i18n from './i18n'
-import IconCrypto from "vue-cryptocurrency-icons";
+import "@babel/polyfill";
+import "mutationobserver-shim";
+import Vue from "vue";
+import "./plugins/bootstrap-vue";
+import App from "./App.vue";
+import i18n from "./i18n";
 
-Vue.config.productionTip = true
+const IconCrypto = require("vue-cryptocurrency-icons");
+
+Vue.config.productionTip = true;
 Vue.use(IconCrypto);
 
 new Vue({
-	i18n,
-	render: h => h(App),
-}).$mount('#app')
+  i18n,
+  render: (h) => h(App),
+}).$mount("#app");

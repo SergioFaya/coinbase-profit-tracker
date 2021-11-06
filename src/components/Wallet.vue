@@ -93,7 +93,7 @@
 <script lang="ts">
 // eslint-disable-next-line no-unused-vars
 import { Account } from 'coinbase';
-import transactionsService from '../services/AxiosTransactions'
+import coinbaseClient from '../services/CoinbaseClient'
 
 export default {
 	name: 'wallet',
@@ -113,7 +113,7 @@ export default {
 	methods: {
 		getAccounts() {
 			this.$emit('loading', true);
-			transactionsService
+			coinbaseClient
 				.getAccounts()
 				.then((accounts) => {
 					this.accounts = accounts
@@ -132,7 +132,7 @@ export default {
 		},
 		getAccountBuys(account: Account) {
 			this.$emit('loading', true);
-			transactionsService
+			coinbaseClient
 				.getAccountBuys(account)
 				.then((accountBuys) => {
 					this.accountBuys = accountBuys;
@@ -150,7 +150,7 @@ export default {
 		},
 		getAccountSells(account: Account){
 			this.$emit('loading', true);
-			transactionsService
+			coinbaseClient
 				.getAccountSells(account)
 				.then((accountSells) => {
 					this.accountSells = accountSells;
@@ -171,7 +171,7 @@ export default {
 			this.getAccountSells(account)
 		},
 		getUserInfo() {
-			return JSON.parse(localStorage.getItem('user'));
+			return JSON.parse(localStorage.getItem('user')!);
 		}
 	},
 	computed: {
