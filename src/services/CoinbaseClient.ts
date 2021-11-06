@@ -1,8 +1,9 @@
 import { Client, Pagination, ClientConstructOpts, User } from "coinbase";
 import { Account, Buy, Sell } from "coinbase";
+import axiosCoinbaseClient from './AxiosCoinbaseClient'
 
-const apiKey = process.env.VUE_APP_COINBASE_API_KEY;
-const apiSecret = process.env.VUE_APP_COINBASE_API_KEY_SECRET;
+const apiKey = process.env.VUE_APP_COINBASE_API_KEY!;
+const apiSecret = process.env.VUE_APP_COINBASE_API_KEY_SECRET!;
 
 const client = new Client({
     apiKey: apiKey,
@@ -13,6 +14,7 @@ const client = new Client({
     strictSSL: false
 });
 
+
 const handleCallback = (reject: Function, resolve: Function, err: Error | null, result: any) => {
     if (err) {
         reject(err);
@@ -22,34 +24,42 @@ const handleCallback = (reject: Function, resolve: Function, err: Error | null, 
 }
 
 const getCurrentUserPromise = (): Promise<User> =>
-    new Promise((resolve, reject) => {
-        client.getCurrentUser((err, result) => {
-            handleCallback(reject, resolve, err, result)
-        });
-    });
+    axiosCoinbaseClient.get("/v2/user")
+        .then((response) => {
+            return response.data.data
+        }).catch(console.error)
 
-const getAccountsPromise = (opts: any = {}): Promise<Account[]> =>
-    new Promise((resolve, reject) => {
-        client.getAccounts(opts, (err, result: Account[]) => {
-            handleCallback(reject, resolve, err, result)
-        });
-    });
+
+const getAccountsPromise = (opts: any = {}): Promise<Account[] | void> =>
+
+    axiosCoinbaseClient.get("/v2/accounts")
+        .then(async (response) => {
+            let paging: Pagination = response.data.pagination
+            let accounts: Account[] = response.data.data;
+
+            while (paging.next_uri) {
+                const nextPage = await axiosCoinbaseClient.get(paging.next_uri)
+                accounts = accounts.concat(nextPage.data.data)
+                paging = nextPage.data.pagination
+            }
+
+            if (paging.next_uri == null) {
+                return accounts
+            }
+        }).catch(console.error)
+
 
 const getBuysPromise = (account: Account): Promise<Buy[]> =>
-    new Promise((resolve, reject) => {
-        const pagination = {} as Pagination;
-        account.getBuys(pagination, (err, result: Buy[]) => {
-            handleCallback(reject, resolve, err, result)
-        });
-    });
+    axiosCoinbaseClient.get(`/v2/accounts/${account.id}/buys`)
+        .then((response) => {
+            return response.data.data
+        }).catch(console.error)
 
 const getSellsPromise = (account: Account): Promise<Sell[]> =>
-    new Promise((resolve, reject) => {
-        const pagination = {} as Pagination;
-        account.getSells(pagination, (err, result: Sell[]) => {
-            handleCallback(reject, resolve, err, result)
-        });
-    });
+    axiosCoinbaseClient.get(`/v2/accounts/${account.id}/sells`)
+        .then((response) => {
+            return response.data.data
+        }).catch(console.error)
 
 
 export default {

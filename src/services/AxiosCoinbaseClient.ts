@@ -1,8 +1,8 @@
 import axios from 'axios';
 const crypto = require('crypto');
 
-const apiKey = process.env.VUE_APP_COINBASE_API_KEY;
-const apiSecret = process.env.VUE_APP_COINBASE_API_KEY_SECRET;
+const apiKey = process.env.VUE_APP_COINBASE_API_KEY!;
+const apiSecret = process.env.VUE_APP_COINBASE_API_KEY_SECRET!;
 
 const getTimestampInSeconds = (): number => {
 	return Math.floor(Date.now() / 1000);
