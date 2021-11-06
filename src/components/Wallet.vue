@@ -91,7 +91,7 @@
 </template>
 
 <script lang="js">
-import transactionsService from '../services/Transactions.js'
+import transactionsService from '../services/AxiosTransactions.js'
 
 export default {
 	name: 'wallet',

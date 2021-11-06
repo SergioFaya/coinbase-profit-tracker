@@ -39,7 +39,7 @@ export default {
   },
   mounted() {
     this.getUserInfo();
-    require("./services/Transactions.js");
+    require("./services/AxiosTransactions.js");
   },
   methods: {
     updateNav(name) {
