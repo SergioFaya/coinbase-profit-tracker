@@ -84,13 +84,15 @@
 				<b-card-text>{{account.native_balance.amount}} {{account.native_balance.currency}}</b-card-text>
 			</b-card-body>
 			<!-- <b-card-text>{{account}}</b-card-text> -->
-			<b-button variant="light" @click="displayAccountInfo(account.id)">{{ $t("wallet.transactions")}}</b-button>
+			<b-button variant="light" @click="displayAccountInfo(account)">{{ $t("wallet.transactions")}}</b-button>
 		</b-card>
 	</b-card-group>
 </section>
 </template>
 
 <script lang="ts">
+// eslint-disable-next-line no-unused-vars
+import { Account } from 'coinbase';
 import transactionsService from '../services/AxiosTransactions'
 
 export default {
@@ -128,13 +130,13 @@ export default {
 					this.$emit('loading', false);
 				});
 		},
-		getAccountBuys(accountId) {
+		getAccountBuys(account: Account) {
 			this.$emit('loading', true);
 			transactionsService
-				.getAccountBuys(accountId)
+				.getAccountBuys(account)
 				.then((accountBuys) => {
-					this.accountBuys = accountBuys.data;
-					if (accountBuys.data.length > 0) {
+					this.accountBuys = accountBuys;
+					if (accountBuys.length > 0) {
 						this.$bvModal.show('accountInfoModal')
 					}else{
 						this.$emit('warnMsg', "No existe información de compras sobre la transaccion");
@@ -146,13 +148,13 @@ export default {
 					this.$emit('loading', false);
 				});
 		},
-		getAccountSells(accountId){
+		getAccountSells(account: Account){
 			this.$emit('loading', true);
 			transactionsService
-				.getAccountSells(accountId)
+				.getAccountSells(account)
 				.then((accountSells) => {
-					this.accountSells = accountSells.data;
-					if (accountSells.data.length > 0) {
+					this.accountSells = accountSells;
+					if (accountSells.length > 0) {
 						this.$bvModal.show('accountInfoModal')
 					}else{
 						this.$emit('warnMsg', "No existe información de ventas sobre la transaccion");
@@ -164,9 +166,9 @@ export default {
 					this.$emit('loading', false);
 				});
 		},
-		displayAccountInfo(accountId){
-			this.getAccountBuys(accountId)
-			this.getAccountSells(accountId)
+		displayAccountInfo(account: Account){
+			this.getAccountBuys(account)
+			this.getAccountSells(account)
 		},
 		getUserInfo() {
 			return JSON.parse(localStorage.getItem('user'));
