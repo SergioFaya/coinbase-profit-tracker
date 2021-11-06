@@ -1,10 +1,11 @@
+import { Account } from 'coinbase';
 import axios from './AxiosCoinbaseClient';
 
 export default {
 	/**
 	 * Returns a list of the user accounts
 	 */
-	getAccounts() {
+	getAccounts(): Promise<Account[]>{
 		return axios
 			.get('/v2/accounts')
 			.then((response) => {

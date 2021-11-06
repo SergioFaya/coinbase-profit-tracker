@@ -18,8 +18,9 @@
 import NavBar from "./components/NavBar.vue";
 import General from "./components/General.vue";
 import Wallet from "./components/Wallet.vue";
-import axios from "./services/AxiosCoinbaseClient.js";
+import axios from "./services/AxiosCoinbaseClient";
 import LoadingOverlayCustom from "./components/LoadingOverlayCustom.vue";
+import AxiosTransactions from "./services/AxiosTransactions"
 
 export default {
   name: "App",
@@ -39,7 +40,7 @@ export default {
   },
   mounted() {
     this.getUserInfo();
-    require("./services/AxiosTransactions.js");
+    AxiosTransactions
   },
   methods: {
     updateNav(name) {

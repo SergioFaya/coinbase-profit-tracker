@@ -8,8 +8,8 @@
 </template>
 
 <script lang="js">
-import LineChart from './charts/LineChart.js'
-import BarChart from './charts/BarChart.js'
+import LineChart from './charts/LineChart'
+import BarChart from './charts/BarChart'
 
 
 export default {

@@ -90,8 +90,8 @@
 </section>
 </template>
 
-<script lang="js">
-import transactionsService from '../services/AxiosTransactions.js'
+<script lang="ts">
+import transactionsService from '../services/AxiosTransactions'
 
 export default {
 	name: 'wallet',
@@ -114,10 +114,12 @@ export default {
 			transactionsService
 				.getAccounts()
 				.then((accounts) => {
-					this.accounts = accounts;
-					this.totalAmount = accounts.reduce((total, x) => {
-						return total + new Number(x.native_balance.amount);
-					}, 0);
+					this.accounts = accounts
+					.filter((account)=> {return +account.native_balance.amount>0});
+
+					this.totalAmount = this.accounts
+					.map((account)=> { return +account.native_balance.amount})
+					.reduce((total, currentAmount)=> { return total + currentAmount})
 
 					this.totalAmount = Math.floor(this.totalAmount * 100) / 100;
 				}).catch((err) => {

@@ -19,15 +19,23 @@
     "popper.js": "^1.16.1",
     "vue": "^2.6.11",
     "vue-chartjs": "^3.5.1",
+    "vue-class-component": "^7.2.3",
     "vue-cryptocurrency-icons": "^0.2.5",
     "vue-i18n": "^8.17.3",
-    "vue-loading-overlay": "^3.4.0"
+    "vue-loading-overlay": "^3.4.0",
+    "vue-property-decorator": "^9.1.2"
   },
   "devDependencies": {
     "@babel/polyfill": "^7.7.0",
+    "@types/coinbase": "^2.0.8",
+    "@types/node": "^16.11.6",
+    "@typescript-eslint/eslint-plugin": "^2.33.0",
+    "@typescript-eslint/parser": "^2.33.0",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-typescript": "^4.5.15",
     "@vue/cli-service": "~4.5.0",
+    "@vue/eslint-config-typescript": "^5.0.2",
     "babel-eslint": "^10.1.0",
     "bootstrap": "^4.3.1",
     "eslint": "^6.7.2",
@@ -37,6 +45,7 @@
     "portal-vue": "^2.1.6",
     "sass": "^1.19.0",
     "sass-loader": "^8.0.0",
+    "typescript": "~4.1.5",
     "vue-cli-plugin-bootstrap-vue": "~0.6.0",
     "vue-cli-plugin-i18n": "~1.0.1",
     "vue-template-compiler": "^2.6.11"
@@ -48,10 +57,11 @@
     },
     "extends": [
       "plugin:vue/essential",
-      "eslint:recommended"
+      "eslint:recommended",
+      "@vue/typescript"
     ],
     "parserOptions": {
-      "parser": "babel-eslint"
+      "parser": "@typescript-eslint/parser"
     },
     "rules": {}
   },
