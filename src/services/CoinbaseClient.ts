@@ -69,10 +69,10 @@ export default {
     getAccounts(): Promise<Account[]> {
         return getAccountsPromise().catch(console.error).then()
     },
-    getAccountBuys(account: Account): Promise<Buy[]> {
-        return getBuysPromise(account).catch(console.error).then()
+    async getAccountBuys(account: Account): Promise<Buy[]> {
+        return await getBuysPromise(account)
     },
-    getAccountSells(account: Account): Promise<Sell[]> {
-        return getSellsPromise(account).catch(console.error).then()
+    async getAccountSells(account: Account): Promise<Sell[]> {
+        return await getSellsPromise(account)
     },
 };

@@ -10,8 +10,6 @@ const getTimestampInSeconds = (): number => {
 
 const buildSignature = (timestamp: number, req: any): string => {
 	var message = timestamp + req.method + req.path + req.body;
-	console.log(message);
-
 	//create a hexedecimal encoded SHA256 signature of the message
 	return crypto.createHmac("sha256", apiSecret).update(message).digest("hex");
 }

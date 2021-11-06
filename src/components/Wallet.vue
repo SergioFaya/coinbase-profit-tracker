@@ -70,6 +70,9 @@
 	<b-card bg-variant="secondary" text-variant="white" class="text-left mt-4 mb-4">
 		<b-card-body class="p-0 pl-2">
 			{{ $t("wallet.total")}}: {{totalAmount}} {{getUserInfo().native_currency}}
+			<hr>
+			Invertido: {{totalBuy}} {{getUserInfo().native_currency}}
+
 		</b-card-body>
 	</b-card>
 
@@ -92,92 +95,149 @@
 
 <script lang="ts">
 // eslint-disable-next-line no-unused-vars
-import { Account } from 'coinbase';
-import coinbaseClient from '../services/CoinbaseClient'
+import { Account, Buy, Sell } from "coinbase";
+import coinbaseClient from "../services/CoinbaseClient";
 
 export default {
-	name: 'wallet',
-	components: {},
-	props: [],
-	mounted() {
-		this.getAccounts();
-	},
-	data() {
-		return {
-			accounts: null,
-			totalAmount: 0,
-			accountBuys: null,
-			accountSells: null,
-		}
-	},
-	methods: {
-		getAccounts() {
-			this.$emit('loading', true);
-			coinbaseClient
-				.getAccounts()
-				.then((accounts) => {
-					this.accounts = accounts
-					.filter((account)=> {return +account.native_balance.amount>0});
+  name: "wallet",
+  components: {},
+  props: [],
+  mounted() {
+    this.getAccounts();
+  },
+  data() {
+    return {
+      accounts: null,
+      totalAmount: 0,
+      accountBuys: [] as Buy[],
+      accountSells: [] as Sell[],
+      totalBuy: 0,
+      totalSell: 0,
+    };
+  },
+  methods: {
+    async computeProfit() {
+      this.promisesBuys = this.accounts.map(async (account) => {
+        return await coinbaseClient.getAccountBuys(account);
+      });
 
-					this.totalAmount = this.accounts
-					.map((account)=> { return +account.native_balance.amount})
-					.reduce((total, currentAmount)=> { return total + currentAmount})
+      this.totalBuy =  (await Promise.all(this.promisesBuys))
+        .flatMap((list) => {
+          return list;
+        })
+        .filter((buy: Buy) => {
+          return buy.status === "completed";
+        })
+        .map((buy: Buy) => {
+          return +buy.total.amount;
+        })
+        .reduce((a: number, b: number) => {
+          return a + b;
+        });
 
-					this.totalAmount = Math.floor(this.totalAmount * 100) / 100;
-				}).catch((err) => {
-					this.$emit('errorMsg', err);
-				}).finally(() => {
-					this.$emit('loading', false);
-				});
-		},
-		getAccountBuys(account: Account) {
-			this.$emit('loading', true);
-			coinbaseClient
-				.getAccountBuys(account)
-				.then((accountBuys) => {
-					this.accountBuys = accountBuys;
-					if (accountBuys.length > 0) {
-						this.$bvModal.show('accountInfoModal')
-					}else{
-						this.$emit('warnMsg', "No existe información de compras sobre la transaccion");
-					}
-				})
-				.catch((err) => {
-					this.$emit('errorMsg', err);
-				}).finally(() => {
-					this.$emit('loading', false);
-				});
-		},
-		getAccountSells(account: Account){
-			this.$emit('loading', true);
-			coinbaseClient
-				.getAccountSells(account)
-				.then((accountSells) => {
-					this.accountSells = accountSells;
-					if (accountSells.length > 0) {
-						this.$bvModal.show('accountInfoModal')
-					}else{
-						this.$emit('warnMsg', "No existe información de ventas sobre la transaccion");
-					}
-				})
-				.catch((err) => {
-					this.$emit('errorMsg', err);
-				}).finally(() => {
-					this.$emit('loading', false);
-				});
-		},
-		displayAccountInfo(account: Account){
-			this.getAccountBuys(account)
-			this.getAccountSells(account)
-		},
-		getUserInfo() {
-			return JSON.parse(localStorage.getItem('user')!);
-		}
-	},
-	computed: {
+      this.promisesSells = this.accounts.map(async (account) => {
+        return await coinbaseClient.getAccountSells(account);
+      });
 
-	}
-}
+      this.totalSell =  (await Promise.all(this.promisesSells))
+        .flatMap((list) => {
+          return list;
+        })
+        .filter((buy: Sell) => {
+          return buy.status === "completed";
+        })
+        .map((buy: Sell) => {
+          return +buy.total.amount;
+        })
+        .reduce((a: number, b: number) => {
+          return a + b;
+        });
+    },
+    getAccounts() {
+      this.$emit("loading", true);
+      coinbaseClient
+        .getAccounts()
+        .then((accounts) => {
+          this.accounts = accounts
+            .filter((account) => {
+              return +account.native_balance.amount > 0;
+            })
+            .sort(
+              (a1, a2) => +a2.native_balance.amount - +a1.native_balance.amount
+            );
+
+          this.totalAmount = this.accounts
+            .map((account) => {
+              return +account.native_balance.amount;
+            })
+            .reduce((total, currentAmount) => {
+              return total + currentAmount;
+            });
+
+          this.totalAmount = Math.floor(this.totalAmount * 100) / 100;
+        })
+        .catch((err) => {
+          this.$emit("errorMsg", err);
+        })
+        .finally(() => {
+          this.computeProfit();
+          this.$emit("loading", false);
+        });
+    },
+    getAccountBuys(account: Account) {
+      this.$emit("loading", true);
+      coinbaseClient
+        .getAccountBuys(account)
+        .then((accountBuys) => {
+          this.accountBuys = accountBuys;
+          if (accountBuys.length > 0) {
+            this.$bvModal.show("accountInfoModal");
+          } else {
+            this.$emit(
+              "warnMsg",
+              "No existe información de compras sobre la transaccion"
+            );
+          }
+        })
+        .catch((err) => {
+          this.$emit("errorMsg", err);
+        })
+        .finally(() => {
+          this.$emit("loading", false);
+        });
+    },
+    getAccountSells(account: Account) {
+      this.$emit("loading", true);
+      coinbaseClient
+        .getAccountSells(account)
+        .then((accountSells) => {
+          this.accountSells = accountSells;
+          if (accountSells.length > 0) {
+            this.$bvModal.show("accountInfoModal");
+          } else {
+            this.$emit(
+              "warnMsg",
+              "No existe información de ventas sobre la transaccion"
+            );
+          }
+        })
+        .catch((err) => {
+          this.$emit("errorMsg", err);
+        })
+        .finally(() => {
+          this.$emit("loading", false);
+        });
+    },
+    displayAccountInfo(account: Account) {
+      this.getAccountBuys(account);
+      this.getAccountSells(account);
+    },
+    getUserInfo() {
+      return JSON.parse(localStorage.getItem("user")!);
+    },
+  },
+  computed: {},
+};
 </script>
 
 <style lang="scss" scoped>
