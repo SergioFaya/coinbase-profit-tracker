@@ -1,96 +1,129 @@
 <template lang="html">
-<section class="wallet">
-	<h2> {{ $t("wallet.title")}}</h2>
+  <section class="wallet">
+    <h2>{{ $t("wallet.title") }}</h2>
 
-	<b-modal class="" size="xl" id="accountInfoModal" v-if="accountBuys!=null">
-		<div slot="modal-title">
-			{{$t("wallet.transactions")}}
-		</div>
+    <b-modal
+      class=""
+      size="xl"
+      id="accountInfoModal"
+      v-if="accountBuys != null"
+    >
+      <div slot="modal-title">
+        {{ $t("wallet.transactions") }}
+      </div>
 
-		<b-container fluid>
-			<b-row class="mb-1 text-justify">
-				<b-col>
-					<h5>{{$t("wallet.buys")}}</h5>
-					<b-row class="mb-1 text-center">
-						<b-col>
-							<b-badge>
-							{{$t("wallet.amounts")}}
-							</b-badge>
-						</b-col>
-						<b-col>
-							<b-badge>
-							{{$t("wallet.fees")}}
-							</b-badge>
-						</b-col>
-					</b-row>
-					<div v-for="accountBuy in accountBuys" :key="accountBuy.id">
-						<b-row class="mb-1 text-justify">
-							<b-col>
-								{{ accountBuy.amount.amount}} {{accountBuy.amount.currency }}
-							</b-col>
-							<b-col>
-								<div v-for="fee in accountBuy.fees" :key="fee.type">
-									<p>{{fee.type}} {{fee.amount.amount}} {{fee.amount.currency}}</p>
-								</div>
-							</b-col>
-						</b-row>
-					</div>
-				</b-col>
-				<b-col>
-					<h5>{{$t("wallet.sells")}}</h5>
-					<b-row class="mb-1 text-center">
-						<b-col>
-							<b-badge>
-							{{$t("wallet.amounts")}}
-							</b-badge>
-						</b-col>
-						<b-col>
-							<b-badge>
-							{{$t("wallet.fees")}}
-							</b-badge>
-						</b-col>
-					</b-row>
-					<div v-for="accountSell in accountSells" :key="accountSell.id">
-						<b-row class="mb-1 text-justify">
-							<b-col>
-								{{ accountSell.amount.amount}} {{accountSell.amount.currency }}
-							</b-col>
-							<b-col>
-								<div v-for="fee in accountSell.fees" :key="fee.type">
-									<p>{{fee.type}} {{fee.amount.amount}} {{fee.amount.currency}}</p>
-								</div>
-							</b-col>
-						</b-row>
-					</div>
-				</b-col>
-			</b-row>
-		</b-container>
-	</b-modal>
+      <b-container fluid>
+        <b-row class="mb-1 text-justify">
+          <b-col>
+            <h5>{{ $t("wallet.buys") }}</h5>
+            <b-row class="mb-1 text-center">
+              <b-col>
+                <b-badge>
+                  {{ $t("wallet.amounts") }}
+                </b-badge>
+              </b-col>
+              <b-col>
+                <b-badge>
+                  {{ $t("wallet.fees") }}
+                </b-badge>
+              </b-col>
+            </b-row>
+            <div v-for="accountBuy in accountBuys" :key="accountBuy.id">
+              <b-row class="mb-1 text-justify">
+                <b-col>
+                  {{ accountBuy.amount.amount }}
+                  {{ accountBuy.amount.currency }}
+                </b-col>
+                <b-col>
+                  <div v-for="fee in accountBuy.fees" :key="fee.type">
+                    <p>
+                      {{ fee.type }} {{ fee.amount.amount }}
+                      {{ fee.amount.currency }}
+                    </p>
+                  </div>
+                </b-col>
+              </b-row>
+            </div>
+          </b-col>
+          <b-col>
+            <h5>{{ $t("wallet.sells") }}</h5>
+            <b-row class="mb-1 text-center">
+              <b-col>
+                <b-badge>
+                  {{ $t("wallet.amounts") }}
+                </b-badge>
+              </b-col>
+              <b-col>
+                <b-badge>
+                  {{ $t("wallet.fees") }}
+                </b-badge>
+              </b-col>
+            </b-row>
+            <div v-for="accountSell in accountSells" :key="accountSell.id">
+              <b-row class="mb-1 text-justify">
+                <b-col>
+                  {{ accountSell.amount.amount }}
+                  {{ accountSell.amount.currency }}
+                </b-col>
+                <b-col>
+                  <div v-for="fee in accountSell.fees" :key="fee.type">
+                    <p>
+                      {{ fee.type }} {{ fee.amount.amount }}
+                      {{ fee.amount.currency }}
+                    </p>
+                  </div>
+                </b-col>
+              </b-row>
+            </div>
+          </b-col>
+        </b-row>
+      </b-container>
+    </b-modal>
 
-	<b-card bg-variant="secondary" text-variant="white" class="text-left mt-4 mb-4">
-		<b-card-body class="p-0 pl-2">
-			{{ $t("wallet.total")}}: {{totalAmount}} {{getUserInfo().native_currency}}
-			<hr>
-			Invertido: {{totalBuy}} {{getUserInfo().native_currency}}
+    <b-card
+      bg-variant="secondary"
+      text-variant="white"
+      class="text-left mt-4 mb-4"
+    >
+      <b-card-body class="p-0 pl-2">
+        {{ $t("wallet.total") }}: {{ totalAmount }}
+        {{ getUserInfo().native_currency }}
+        <hr />
+        Invertido: {{ totalBuy }} {{ getUserInfo().native_currency }}
+      </b-card-body>
+    </b-card>
 
-		</b-card-body>
-	</b-card>
-
-	<b-card-group columns >
-		<b-card v-for="account in accounts" :key="account.id" bg-variant="secondary" text-variant="white" class="text-center">
-			<b-card-header>
-				<span>{{account.name}}
-					<IconCrypto :coinname="account.currency" color="color" format="svg" /></span>
-			</b-card-header>
-			<b-card-body>
-				<b-card-text v-if="account.type == 'wallet'">{{account.balance.amount}} {{account.balance.currency}}</b-card-text>
-				<b-card-text>{{account.native_balance.amount}} {{account.native_balance.currency}}</b-card-text>
-			</b-card-body>
-			<!-- <b-card-text>{{account}}</b-card-text> -->
-			<b-button variant="light" @click="displayAccountInfo(account)">{{ $t("wallet.transactions")}}</b-button>
-		</b-card>
-	</b-card-group>
-</section>
+    <b-card-group columns>
+      <b-card
+        v-for="account in accounts"
+        :key="account.id"
+        bg-variant="secondary"
+        text-variant="white"
+        class="text-center"
+      >
+        <b-card-header>
+          <span
+            >{{ account.name }}
+            <IconCrypto :coinname="account.currency" color="color" format="svg"
+          /></span>
+        </b-card-header>
+        <b-card-body>
+          <b-card-text v-if="account.type == 'wallet'"
+            >{{ account.balance.amount }}
+            {{ account.balance.currency }}</b-card-text
+          >
+          <b-card-text
+            >{{ account.native_balance.amount }}
+            {{ account.native_balance.currency }}</b-card-text
+          >
+        </b-card-body>
+        <!-- <b-card-text>{{account}}</b-card-text> -->
+        <b-button variant="light" @click="displayAccountInfo(account)">{{
+          $t("wallet.transactions")
+        }}</b-button>
+      </b-card>
+    </b-card-group>
+  </section>
 </template>
 
 <script lang="ts">
@@ -107,12 +140,15 @@ export default {
   },
   data() {
     return {
-      accounts: null,
+      accounts: [] as Account[],
       totalAmount: 0,
       accountBuys: [] as Buy[],
       accountSells: [] as Sell[],
       totalBuy: 0,
       totalSell: 0,
+
+      promisesBuys: null as any,
+      promisesSells: null as Promise<Sell[]>[],
     };
   },
   methods: {
@@ -121,7 +157,7 @@ export default {
         return await coinbaseClient.getAccountBuys(account);
       });
 
-      this.totalBuy =  (await Promise.all(this.promisesBuys))
+      this.totalBuy = (await Promise.all(this.promisesBuys))
         .flatMap((list) => {
           return list;
         })
@@ -139,7 +175,7 @@ export default {
         return await coinbaseClient.getAccountSells(account);
       });
 
-      this.totalSell =  (await Promise.all(this.promisesSells))
+      this.totalSell = (await Promise.all(this.promisesSells))
         .flatMap((list) => {
           return list;
         })
@@ -157,7 +193,7 @@ export default {
       this.$emit("loading", true);
       coinbaseClient
         .getAccounts()
-        .then((accounts) => {
+        .then((accounts: Account[]) => {
           this.accounts = accounts
             .filter((account) => {
               return +account.native_balance.amount > 0;
